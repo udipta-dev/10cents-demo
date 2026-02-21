@@ -49,16 +49,17 @@ const STEPS = [
 export default function TutorialOverlay({ onComplete }) {
   const [step, setStep] = useState(0)
   const [rect, setRect] = useState(null)
-  const [tooltipStyle, setTooltipStyle] = useState({})
+  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 })
+  const [tooltipPlacement, setTooltipPlacement] = useState('bottom')
   const current = STEPS[step]
   const isLast = step === STEPS.length - 1
 
   const measureTarget = useCallback(() => {
     const el = document.querySelector(current.target)
     if (!el) {
-      // Fallback: if element not found, show tooltip centered
       setRect(null)
-      setTooltipStyle({ top: '40%', left: '50%', transform: 'translateX(-50%)' })
+      setTooltipPos({ top: window.innerHeight * 0.35, left: window.innerWidth / 2 - 150 })
+      setTooltipPlacement('bottom')
       return
     }
     const r = el.getBoundingClientRect()
@@ -72,32 +73,43 @@ export default function TutorialOverlay({ onComplete }) {
     }
     setRect(spotlight)
 
-    // Position tooltip above or below the spotlight
-    const gap = 16
+    // Calculate tooltip position — center it on the spotlight horizontally
+    const tooltipWidth = Math.min(300, r.width + pad * 2)
+    const centerX = spotlight.x + spotlight.w / 2 - tooltipWidth / 2
+    // Clamp to viewport with 16px margin
+    const clampedX = Math.max(16, Math.min(centerX, window.innerWidth - tooltipWidth - 16))
+
+    const gap = 12
+    const tooltipApproxHeight = 140
+
+    // Try preferred position first, fall back to overlay if no room
     if (current.position === 'top') {
-      // Tooltip above the element
-      const topPos = spotlight.y - gap
-      setTooltipStyle({
-        bottom: `${window.innerHeight - topPos}px`,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        maxWidth: 'calc(100vw - 48px)',
-      })
+      const topPos = spotlight.y - gap - tooltipApproxHeight
+      if (topPos > 10) {
+        // Enough room above
+        setTooltipPos({ top: topPos, left: clampedX })
+        setTooltipPlacement('top')
+      } else {
+        // Not enough room above — overlay on top of the element
+        setTooltipPos({ top: spotlight.y + 12, left: clampedX })
+        setTooltipPlacement('overlay')
+      }
     } else {
-      // Tooltip below the element
-      const bottomOfSpotlight = spotlight.y + spotlight.h + gap
-      setTooltipStyle({
-        top: `${bottomOfSpotlight}px`,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        maxWidth: 'calc(100vw - 48px)',
-      })
+      const bottomPos = spotlight.y + spotlight.h + gap
+      if (bottomPos + tooltipApproxHeight < window.innerHeight - 10) {
+        // Enough room below
+        setTooltipPos({ top: bottomPos, left: clampedX })
+        setTooltipPlacement('bottom')
+      } else {
+        // Not enough room below — overlay on element
+        setTooltipPos({ top: spotlight.y + spotlight.h - tooltipApproxHeight - 12, left: clampedX })
+        setTooltipPlacement('overlay')
+      }
     }
   }, [current])
 
   useEffect(() => {
-    // Measure on step change and on resize
-    const timer = setTimeout(measureTarget, 50)
+    const timer = setTimeout(measureTarget, 80)
     window.addEventListener('resize', measureTarget)
     return () => {
       clearTimeout(timer)
@@ -117,7 +129,6 @@ export default function TutorialOverlay({ onComplete }) {
     if (step > 0) setStep(s => s - 1)
   }
 
-  // Build the SVG mask with a cutout for the spotlight
   const maskId = 'tutorial-mask'
 
   return (
@@ -134,7 +145,6 @@ export default function TutorialOverlay({ onComplete }) {
       <svg className="absolute inset-0 w-full h-full" style={{ pointerEvents: 'none' }}>
         <defs>
           <mask id={maskId}>
-            {/* White = visible (dark overlay shows), Black = hidden (cutout) */}
             <rect x="0" y="0" width="100%" height="100%" fill="white" />
             {rect && (
               <rect
@@ -161,6 +171,7 @@ export default function TutorialOverlay({ onComplete }) {
       {/* Spotlight border glow */}
       {rect && (
         <motion.div
+          key={`glow-${step}`}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
@@ -180,12 +191,17 @@ export default function TutorialOverlay({ onComplete }) {
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
-          initial={{ opacity: 0, y: current.position === 'top' ? 10 : -10 }}
+          initial={{ opacity: 0, y: tooltipPlacement === 'top' ? 10 : -10 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: current.position === 'top' ? 10 : -10 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="absolute z-10 w-[320px]"
-          style={{ ...tooltipStyle, pointerEvents: 'auto' }}
+          className="absolute z-10"
+          style={{
+            top: tooltipPos.top,
+            left: tooltipPos.left,
+            width: Math.min(300, window.innerWidth - 32),
+            pointerEvents: 'auto',
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="bg-[#1a1a1a] border border-white/[0.1] rounded-2xl p-4 shadow-2xl">
@@ -195,17 +211,24 @@ export default function TutorialOverlay({ onComplete }) {
                 {step + 1} / {STEPS.length}
               </span>
               <span className="text-white font-semibold text-sm">{current.title}</span>
+              {/* Skip */}
+              <button
+                onClick={(e) => { e.stopPropagation(); onComplete(); }}
+                className="ml-auto text-white/30 text-[10px] hover:text-white/60 transition-colors"
+              >
+                Skip
+              </button>
             </div>
 
             {/* Description */}
-            <p className="text-white/70 text-xs leading-relaxed mb-4">
+            <p className="text-white/70 text-xs leading-relaxed mb-3">
               {current.text}
             </p>
 
             {/* Navigation */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {/* Dots */}
-              <div className="flex gap-1.5 flex-1">
+              <div className="flex gap-1 flex-1">
                 {STEPS.map((_, i) => (
                   <div
                     key={i}
@@ -232,24 +255,6 @@ export default function TutorialOverlay({ onComplete }) {
                 {isLast ? 'Got it!' : 'Next'}
               </button>
             </div>
-          </div>
-
-          {/* Arrow pointer */}
-          <div
-            className="absolute left-1/2 -translate-x-1/2"
-            style={{
-              [current.position === 'top' ? 'bottom' : 'top']: '-6px',
-            }}
-          >
-            <div
-              className="w-3 h-3 bg-[#1a1a1a] border border-white/[0.1] rotate-45"
-              style={{
-                borderTop: current.position === 'top' ? 'none' : undefined,
-                borderLeft: current.position === 'top' ? 'none' : undefined,
-                borderBottom: current.position === 'bottom' ? 'none' : undefined,
-                borderRight: current.position === 'bottom' ? 'none' : undefined,
-              }}
-            />
           </div>
         </motion.div>
       </AnimatePresence>

@@ -45,6 +45,121 @@ const SLIDES = [
   },
   {
     id: 2,
+    badge: '🔥 TINDER MEETS TIKTOK',
+    headline: 'Swipe to Trade.\nEndless Markets.',
+    body: 'Prediction markets have never been this fast. No order books, no charts — just swipe and go.',
+    visual: (
+      <div className="my-6 flex flex-col items-center gap-6">
+        {/* Animated card mockup */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, type: 'spring' }}
+          className="relative w-[240px]"
+        >
+          {/* The card */}
+          <motion.div
+            animate={{ x: [0, -8, 8, -4, 4, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }}
+            className="bg-[#0d0d0d] border border-white/[0.08] rounded-2xl p-4 relative"
+          >
+            <div className="flex gap-1.5 mb-2">
+              <span className="bg-orange-500/20 text-orange-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full">Prediction</span>
+              <span className="bg-blue-500/20 text-blue-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full">Crypto</span>
+            </div>
+            <p className="text-white text-sm font-bold leading-snug mb-3">Will BTC hit $100K by December?</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-emerald-500/10 border border-emerald-500/25 rounded-lg py-1.5 text-center">
+                <span className="text-[9px] text-white/40 block">← Swipe left</span>
+                <span className="text-emerald-400 text-xs font-semibold">YES</span>
+              </div>
+              <div className="bg-rose-500/10 border border-rose-500/25 rounded-lg py-1.5 text-center">
+                <span className="text-[9px] text-white/40 block">Swipe right →</span>
+                <span className="text-rose-400 text-xs font-semibold">NO</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Swipe arrows */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="absolute -left-8 top-1/2 -translate-y-1/2"
+          >
+            <motion.span
+              animate={{ x: [0, -6, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+              className="text-emerald-400 text-2xl font-bold"
+            >
+              ←
+            </motion.span>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="absolute -right-8 top-1/2 -translate-y-1/2"
+          >
+            <motion.span
+              animate={{ x: [0, 6, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+              className="text-rose-400 text-2xl font-bold"
+            >
+              →
+            </motion.span>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="absolute left-1/2 -translate-x-1/2 -top-8"
+          >
+            <motion.span
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+              className="text-white/40 text-xl"
+            >
+              ↑
+            </motion.span>
+          </motion.div>
+        </motion.div>
+
+        {/* Feature bullets */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="space-y-2.5 w-full"
+        >
+          <div className="flex items-center gap-3 bg-white/[0.03] rounded-xl px-4 py-2.5">
+            <span className="text-lg">👆</span>
+            <div>
+              <span className="text-white text-xs font-semibold">Tinder-Style Voting</span>
+              <p className="text-white/40 text-[10px]">Swipe left or right to pick a side</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 bg-white/[0.03] rounded-xl px-4 py-2.5">
+            <span className="text-lg">📱</span>
+            <div>
+              <span className="text-white text-xs font-semibold">TikTok-Style Feed</span>
+              <p className="text-white/40 text-[10px]">Endless scroll of live markets — swipe up to skip</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 bg-white/[0.03] rounded-xl px-4 py-2.5">
+            <span className="text-lg">⚡</span>
+            <div>
+              <span className="text-white text-xs font-semibold">2 Seconds to Trade</span>
+              <p className="text-white/40 text-[10px]">One thumb, one swipe, done. No charts or order books.</p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    ),
+    footnote: 'The fastest way to trade predictions — ever.',
+  },
+  {
+    id: 'types',
     badge: '🎯 TWO MARKET TYPES',
     headline: 'Predict or Debate.\nYour Call.',
     body: 'The first platform that combines prediction markets with opinion markets.',
@@ -87,7 +202,7 @@ const SLIDES = [
     footnote: null,
   },
   {
-    id: 3,
+    id: 'micro',
     badge: '💰 MICRO-STAKES',
     headline: 'Every Trade\nis Just 10¢',
     body: 'Swipe right or left to vote. Each vote costs exactly 10 cents — zero gas fees, instant execution.',
@@ -132,7 +247,7 @@ const SLIDES = [
     footnote: 'Gasless trades via EIP-712 signed vouchers on Base.',
   },
   {
-    id: 4,
+    id: 'pool',
     badge: '🏆 DARK POOL',
     headline: 'Win the\nEntire Pool',
     body: "Everyone's 10¢ goes into a shared pool. Results are hidden until you vote. One random winner from the correct side takes the pot.",
@@ -172,7 +287,7 @@ const SLIDES = [
     footnote: 'Odds hidden pre-vote. Dark pool reveals only after you commit.',
   },
   {
-    id: 5,
+    id: 'final',
     badge: null,
     headline: null,
     body: null,
@@ -201,6 +316,10 @@ const SLIDES = [
           <div className="flex items-center gap-3 text-white/60 text-xs">
             <span className="text-emerald-400">✓</span>
             <span>World's first hybrid prediction market</span>
+          </div>
+          <div className="flex items-center gap-3 text-white/60 text-xs">
+            <span className="text-emerald-400">✓</span>
+            <span>Tinder + TikTok UX — swipe to trade</span>
           </div>
           <div className="flex items-center gap-3 text-white/60 text-xs">
             <span className="text-emerald-400">✓</span>
