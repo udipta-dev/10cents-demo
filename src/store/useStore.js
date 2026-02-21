@@ -19,6 +19,7 @@ const useStore = create((set, get) => ({
   bets: loadFromStorage('10cents_bets', sampleBets),
 
   showOnboarding: true,
+  showTutorial: false,
 
   activeTab: 'feed',
   showInfoModal: false,
@@ -108,11 +109,16 @@ const useStore = create((set, get) => ({
       balance: INITIAL_BALANCE,
       bets: sampleBets,
       showOnboarding: true,
+      showTutorial: false,
     });
   },
 
   completeOnboarding: () => {
-    set({ showOnboarding: false });
+    set({ showOnboarding: false, showTutorial: true });
+  },
+
+  completeTutorial: () => {
+    set({ showTutorial: false });
   },
 
   toggleInfoModal: () => set(s => ({ showInfoModal: !s.showInfoModal })),

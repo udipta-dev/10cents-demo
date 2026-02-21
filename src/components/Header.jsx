@@ -18,7 +18,7 @@ export default function Header() {
         </div>
 
         {/* Balance and Deposit */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4" data-tutorial="balance">
           <span className="text-lg font-semibold text-white">
             ${balance.toFixed(2)}
           </span>

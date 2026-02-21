@@ -19,6 +19,7 @@ const MarketCard = ({ market, onDismiss, onVote }) => {
     <motion.div
       className="bg-[#0d0d0d] rounded-2xl p-6 h-full shadow-xl flex flex-col relative overflow-hidden border border-white/[0.06]"
       layout
+      data-tutorial="card"
     >
       {/* Pre-vote state */}
       {!hasVoted && (
@@ -71,7 +72,7 @@ const MarketCard = ({ market, onDismiss, onVote }) => {
           {/* Bottom section — pinned to bottom */}
           <div className="mt-5">
             {/* Dark Pool row with ? button */}
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4" data-tutorial="darkpool">
               <div className="flex-1 rounded-lg bg-white/[0.04] border border-white/[0.06] px-3 py-2 flex items-center justify-center gap-2">
                 <svg className="w-3.5 h-3.5 text-white/60" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
@@ -91,7 +92,7 @@ const MarketCard = ({ market, onDismiss, onVote }) => {
             </div>
 
             {/* Choice boxes — tappable */}
-            <div className="grid grid-cols-2 gap-3 mb-2">
+            <div className="grid grid-cols-2 gap-3 mb-2" data-tutorial="choices">
               <button
                 onClick={(e) => { e.stopPropagation(); onVote?.(market.choiceA); }}
                 className="bg-emerald-500/10 border border-emerald-500/25 rounded-xl py-3 px-3 text-center active:bg-emerald-500/25 transition-colors"

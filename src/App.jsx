@@ -11,6 +11,7 @@ import WithdrawModal from './components/WithdrawModal'
 import CreateMarketModal from './components/CreateMarketModal'
 import SuccessOverlay from './components/SuccessOverlay'
 import OnboardingOverlay from './components/OnboardingOverlay'
+import TutorialOverlay from './components/TutorialOverlay'
 
 function App() {
   const activeTab = useStore(s => s.activeTab)
@@ -21,7 +22,9 @@ function App() {
   const showMarketDetails = useStore(s => s.showMarketDetails)
   const showSuccess = useStore(s => s.showSuccess)
   const showOnboarding = useStore(s => s.showOnboarding)
+  const showTutorial = useStore(s => s.showTutorial)
   const completeOnboarding = useStore(s => s.completeOnboarding)
+  const completeTutorial = useStore(s => s.completeTutorial)
   const setActiveTab = useStore(s => s.setActiveTab)
 
   return (
@@ -70,7 +73,7 @@ function App() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="flex items-center border-t border-white/[0.06] bg-[#030303] relative z-20">
+      <div className="flex items-center border-t border-white/[0.06] bg-[#030303] relative z-20" data-tutorial="bottomnav">
         <button
           onClick={() => setActiveTab('feed')}
           className={`flex-1 py-3 flex flex-col items-center gap-0.5 transition-colors ${
@@ -84,6 +87,7 @@ function App() {
         </button>
         <button
           onClick={() => setActiveTab('agents')}
+          data-tutorial="agents-tab"
           className={`flex-1 py-3 flex flex-col items-center gap-0.5 transition-colors ${
             activeTab === 'agents' ? 'text-orange-400' : 'text-white/50'
           }`}
@@ -115,6 +119,7 @@ function App() {
         {showMarketDetails && <MarketDetailsModal />}
         {showSuccess && <SuccessOverlay />}
         {showOnboarding && <OnboardingOverlay onComplete={completeOnboarding} />}
+        {showTutorial && <TutorialOverlay onComplete={completeTutorial} />}
       </AnimatePresence>
     </div>
   )
