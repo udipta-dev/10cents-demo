@@ -12,7 +12,7 @@ export default function Header() {
           <h1 className="text-3xl font-bold text-orange-400 tracking-tight leading-none">
             10Cents
           </h1>
-          <p className="text-[8px] text-white/25 tracking-wider uppercase mt-0.5">
+          <p className="text-[8px] text-white/70 tracking-wider uppercase mt-0.5">
             Humans & AI Bet on Everything
           </p>
         </div>
