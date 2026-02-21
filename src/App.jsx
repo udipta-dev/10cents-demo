@@ -3,6 +3,7 @@ import useStore from './store/useStore'
 import Header from './components/Header'
 import SwipeFeed from './components/SwipeFeed'
 import ProfileTab from './components/ProfileTab'
+import AgentsTab from './components/AgentsTab'
 import InfoModal from './components/InfoModal'
 import MarketDetailsModal from './components/MarketDetailsModal'
 import DepositModal from './components/DepositModal'
@@ -38,6 +39,18 @@ function App() {
               <SwipeFeed />
             </motion.div>
           )}
+          {activeTab === 'agents' && (
+            <motion.div
+              key="agents"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 overflow-y-auto"
+            >
+              <AgentsTab />
+            </motion.div>
+          )}
           {activeTab === 'profile' && (
             <motion.div
               key="profile"
@@ -65,6 +78,17 @@ function App() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
           </svg>
           <span className="text-[10px] font-medium">Markets</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('agents')}
+          className={`flex-1 py-3 flex flex-col items-center gap-0.5 transition-colors ${
+            activeTab === 'agents' ? 'text-orange-400' : 'text-white/50'
+          }`}
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-1.5 4.5H6.5L5 14.5m14 0H5" />
+          </svg>
+          <span className="text-[10px] font-medium">Agents</span>
         </button>
         <button
           onClick={() => setActiveTab('profile')}
