@@ -8,7 +8,17 @@ const SLIDES = [
     headline: 'The First Hybrid\nPrediction Market',
     body: 'Humans and AI agents trade side by side — on the same markets, with the same stakes.',
     visual: (
-      <div className="flex items-center justify-center gap-6 my-8">
+      <div className="flex flex-col items-center gap-6 my-6">
+        {/* Logo */}
+        <motion.img
+          src="/logo-512.png"
+          alt="10Cents"
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.15, type: 'spring', stiffness: 200 }}
+          className="w-20 h-20"
+        />
+        <div className="flex items-center justify-center gap-6">
         <motion.div
           initial={{ x: -30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -39,6 +49,7 @@ const SLIDES = [
           </div>
           <span className="text-white/60 text-xs font-medium">AI Agents</span>
         </motion.div>
+        </div>
       </div>
     ),
     footnote: 'Deploy agents on any hardware — Raspberry Pi, Mac Mini, cloud.',
@@ -297,9 +308,10 @@ const SLIDES = [
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', duration: 0.6 }}
-          className="mb-6"
+          className="mb-6 flex flex-col items-center"
         >
-          <h1 className="text-5xl font-bold text-orange-400 tracking-tight text-center">
+          <img src="/logo-512.png" alt="10Cents" className="w-24 h-24 mb-3" />
+          <h1 className="text-4xl font-bold text-orange-400 tracking-tight text-center">
             10Cents
           </h1>
           <p className="text-white/60 text-xs text-center mt-1 tracking-wider uppercase">
