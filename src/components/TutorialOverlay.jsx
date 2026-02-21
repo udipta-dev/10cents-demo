@@ -46,6 +46,19 @@ const STEPS = [
   },
 ]
 
+// Get the app container bounds
+function getAppBounds() {
+  const appEl = document.querySelector('[data-app-container]')
+  if (appEl) {
+    const r = appEl.getBoundingClientRect()
+    return { left: r.left, right: r.right, width: r.width }
+  }
+  // Fallback: use viewport but cap at 430px centered
+  const w = Math.min(430, window.innerWidth)
+  const left = (window.innerWidth - w) / 2
+  return { left, right: left + w, width: w }
+}
+
 export default function TutorialOverlay({ onComplete }) {
   const [step, setStep] = useState(0)
   const [rect, setRect] = useState(null)
@@ -56,12 +69,20 @@ export default function TutorialOverlay({ onComplete }) {
 
   const measureTarget = useCallback(() => {
     const el = document.querySelector(current.target)
+    const app = getAppBounds()
+    const tooltipWidth = Math.min(app.width - 32, 300)
+    const margin = 16
+
     if (!el) {
       setRect(null)
-      setTooltipPos({ top: window.innerHeight * 0.35, left: window.innerWidth / 2 - 150 })
+      setTooltipPos({
+        top: window.innerHeight * 0.35,
+        left: app.left + (app.width - tooltipWidth) / 2,
+      })
       setTooltipPlacement('bottom')
       return
     }
+
     const r = el.getBoundingClientRect()
     const pad = current.padding || 8
     const spotlight = {
@@ -73,36 +94,37 @@ export default function TutorialOverlay({ onComplete }) {
     }
     setRect(spotlight)
 
-    // Calculate tooltip position — center it on the spotlight horizontally
-    const tooltipWidth = Math.min(300, r.width + pad * 2)
+    // Center tooltip on the spotlight, but clamp within app container
     const centerX = spotlight.x + spotlight.w / 2 - tooltipWidth / 2
-    // Clamp to viewport with 16px margin
-    const clampedX = Math.max(16, Math.min(centerX, window.innerWidth - tooltipWidth - 16))
+    const clampedX = Math.max(
+      app.left + margin,
+      Math.min(centerX, app.right - tooltipWidth - margin)
+    )
 
     const gap = 12
     const tooltipApproxHeight = 140
 
-    // Try preferred position first, fall back to overlay if no room
     if (current.position === 'top') {
       const topPos = spotlight.y - gap - tooltipApproxHeight
       if (topPos > 10) {
-        // Enough room above
         setTooltipPos({ top: topPos, left: clampedX })
         setTooltipPlacement('top')
       } else {
-        // Not enough room above — overlay on top of the element
+        // Overlay on the element
         setTooltipPos({ top: spotlight.y + 12, left: clampedX })
         setTooltipPlacement('overlay')
       }
     } else {
       const bottomPos = spotlight.y + spotlight.h + gap
       if (bottomPos + tooltipApproxHeight < window.innerHeight - 10) {
-        // Enough room below
         setTooltipPos({ top: bottomPos, left: clampedX })
         setTooltipPlacement('bottom')
       } else {
-        // Not enough room below — overlay on element
-        setTooltipPos({ top: spotlight.y + spotlight.h - tooltipApproxHeight - 12, left: clampedX })
+        // Overlay on the element
+        setTooltipPos({
+          top: spotlight.y + spotlight.h - tooltipApproxHeight - 12,
+          left: clampedX,
+        })
         setTooltipPlacement('overlay')
       }
     }
@@ -130,6 +152,8 @@ export default function TutorialOverlay({ onComplete }) {
   }
 
   const maskId = 'tutorial-mask'
+  const app = getAppBounds()
+  const tooltipWidth = Math.min(app.width - 32, 300)
 
   return (
     <motion.div
@@ -199,7 +223,7 @@ export default function TutorialOverlay({ onComplete }) {
           style={{
             top: tooltipPos.top,
             left: tooltipPos.left,
-            width: Math.min(300, window.innerWidth - 32),
+            width: tooltipWidth,
             pointerEvents: 'auto',
           }}
           onClick={(e) => e.stopPropagation()}
@@ -211,7 +235,6 @@ export default function TutorialOverlay({ onComplete }) {
                 {step + 1} / {STEPS.length}
               </span>
               <span className="text-white font-semibold text-sm">{current.title}</span>
-              {/* Skip */}
               <button
                 onClick={(e) => { e.stopPropagation(); onComplete(); }}
                 className="ml-auto text-white/30 text-[10px] hover:text-white/60 transition-colors"
@@ -220,14 +243,11 @@ export default function TutorialOverlay({ onComplete }) {
               </button>
             </div>
 
-            {/* Description */}
             <p className="text-white/70 text-xs leading-relaxed mb-3">
               {current.text}
             </p>
 
-            {/* Navigation */}
             <div className="flex items-center gap-2">
-              {/* Dots */}
               <div className="flex gap-1 flex-1">
                 {STEPS.map((_, i) => (
                   <div
@@ -239,7 +259,6 @@ export default function TutorialOverlay({ onComplete }) {
                 ))}
               </div>
 
-              {/* Buttons */}
               {step > 0 && (
                 <button
                   onClick={(e) => { e.stopPropagation(); prev(); }}

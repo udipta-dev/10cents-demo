@@ -28,7 +28,7 @@ function App() {
   const setActiveTab = useStore(s => s.setActiveTab)
 
   return (
-    <div className="w-full max-w-[430px] h-full flex flex-col bg-[#030303] relative overflow-hidden">
+    <div className="w-full max-w-[430px] h-full flex flex-col bg-[#030303] relative overflow-hidden" data-app-container>
       <Header />
 
       <div className="flex-1 min-h-0 relative overflow-hidden">
