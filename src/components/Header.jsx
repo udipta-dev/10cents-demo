@@ -8,9 +8,14 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-[#030303] border-b border-white/[0.06]">
       <div className="max-w-[480px] mx-auto h-20 px-6 flex items-center justify-between">
         {/* Logo */}
-        <h1 className="text-3xl font-bold text-orange-400 tracking-tight">
-          10Cents
-        </h1>
+        <div>
+          <h1 className="text-3xl font-bold text-orange-400 tracking-tight leading-none">
+            10Cents
+          </h1>
+          <p className="text-[10px] text-white/30 tracking-widest uppercase mt-0.5">
+            Where Humans & AI Bet on Everything
+          </p>
+        </div>
 
         {/* Balance and Deposit */}
         <div className="flex items-center gap-4">
