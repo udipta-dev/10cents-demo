@@ -18,6 +18,8 @@ const useStore = create((set, get) => ({
   balance: loadFromStorage('10cents_balance', INITIAL_BALANCE),
   bets: loadFromStorage('10cents_bets', sampleBets),
 
+  showOnboarding: true,
+
   activeTab: 'feed',
   showInfoModal: false,
   showDepositModal: false,
@@ -105,7 +107,12 @@ const useStore = create((set, get) => ({
       votedMarkets: {},
       balance: INITIAL_BALANCE,
       bets: sampleBets,
+      showOnboarding: true,
     });
+  },
+
+  completeOnboarding: () => {
+    set({ showOnboarding: false });
   },
 
   toggleInfoModal: () => set(s => ({ showInfoModal: !s.showInfoModal })),

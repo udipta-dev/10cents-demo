@@ -10,6 +10,7 @@ import DepositModal from './components/DepositModal'
 import WithdrawModal from './components/WithdrawModal'
 import CreateMarketModal from './components/CreateMarketModal'
 import SuccessOverlay from './components/SuccessOverlay'
+import OnboardingOverlay from './components/OnboardingOverlay'
 
 function App() {
   const activeTab = useStore(s => s.activeTab)
@@ -19,6 +20,8 @@ function App() {
   const showCreateMarketModal = useStore(s => s.showCreateMarketModal)
   const showMarketDetails = useStore(s => s.showMarketDetails)
   const showSuccess = useStore(s => s.showSuccess)
+  const showOnboarding = useStore(s => s.showOnboarding)
+  const completeOnboarding = useStore(s => s.completeOnboarding)
   const setActiveTab = useStore(s => s.setActiveTab)
 
   return (
@@ -111,6 +114,7 @@ function App() {
         {showCreateMarketModal && <CreateMarketModal />}
         {showMarketDetails && <MarketDetailsModal />}
         {showSuccess && <SuccessOverlay />}
+        {showOnboarding && <OnboardingOverlay onComplete={completeOnboarding} />}
       </AnimatePresence>
     </div>
   )
